@@ -23,6 +23,15 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     }
 }
 
+/*
+
+set initial values
+
+console.log('setting local storage');
+browser.storage.local.set( { 'prod': '88ffaa',
+							 'qa' : 'ff0000' });
+*/
+
 //listen to title changes
 new MutationObserver(function(mutations) {
 	updatePageTitle();
@@ -58,6 +67,7 @@ if (!link) {
 var canvas = document.createElement('canvas');
 var img = document.createElement('img');
 function onImageLoaded() {
+	
 	console.log('create canvas');
 	canvas.width = 16;
 	canvas.height = 16;
@@ -78,6 +88,11 @@ function onImageLoaded() {
 	link.href = canvas.toDataURL('image/png');
 }
 
+/* generic error handler */
+function onError(error) {
+	console.log(error);
+  }
+
 //console.log( 'umm load favicon?' );
 
 img.addEventListener('load', onImageLoaded);
@@ -86,7 +101,16 @@ img.src = browser.runtime.getURL('favicon.ico');
 link.type = 'image/png';
 
 console.log('testing storage');
+console.log( 'the environment is ' )
+console.log( environment );
 
+var envPreference = browser.storage.local.get( environment )
+.then(  (results) => {
+	console.log( 'in the promise' );
+	console.log( results );
+	console.log( results[ environment ] );
+}, onError
+);
 
 console.log( 'ending colorify');
 
